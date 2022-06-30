@@ -108,6 +108,49 @@ function Home() {
                 data={useTransactions("Expense", transactionList).chartData}
               />
             </div>
+            {useTransactions("Expense", transactionList).rightTransactions.map(
+              (item, key) => {
+                return (
+                  <div key={key}>
+                    <span>
+                      {key + 1}
+                      {") "}
+                      {item.source}
+                      {" - ₹"}
+                      {item.amount}{" "}
+                    </span>
+                    <button
+                      onClick={() => {
+                        const transactionRef = db
+                          .database()
+                          .ref("Transaction")
+                          .child(item.id);
+                        transactionRef.remove();
+                      }}
+                    >
+                      Delete
+                    </button>
+                    <button
+                      onClick={() => {
+                        setExpenseDetails({
+                          type: item.type,
+                          source: item.source,
+                          amount: item.amount,
+                          date: new Date(item.date),
+                        });
+                        const transactionRef = db
+                          .database()
+                          .ref("Transaction")
+                          .child(item.id);
+                        transactionRef.remove();
+                      }}
+                    >
+                      Edit
+                    </button>
+                  </div>
+                );
+              }
+            )}
           </Container>
         </Paper>
         <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
@@ -194,7 +237,7 @@ function Home() {
                         onChange={(newDate) => {
                           setExpenseDetails({
                             ...expenseDetails,
-                            date: newDate,
+                            date: new Date(newDate).toDateString(),
                           });
                         }}
                         renderInput={(params) => <TextField {...params} />}
@@ -239,6 +282,49 @@ function Home() {
                 data={useTransactions("Income", transactionList).chartData}
               />
             </div>
+            {useTransactions("Income", transactionList).rightTransactions.map(
+              (item, key) => {
+                return (
+                  <div key={key}>
+                    <span>
+                      {key + 1}
+                      {") "}
+                      {item.source}
+                      {" - ₹"}
+                      {item.amount}{" "}
+                    </span>
+                    <button
+                      onClick={() => {
+                        const transactionRef = db
+                          .database()
+                          .ref("Transaction")
+                          .child(item.id);
+                        transactionRef.remove();
+                      }}
+                    >
+                      Delete
+                    </button>
+                    <button
+                      onClick={() => {
+                        setExpenseDetails({
+                          type: item.type,
+                          source: item.source,
+                          amount: item.amount,
+                          date: new Date(item.date),
+                        });
+                        const transactionRef = db
+                          .database()
+                          .ref("Transaction")
+                          .child(item.id);
+                        transactionRef.remove();
+                      }}
+                    >
+                      Edit
+                    </button>
+                  </div>
+                );
+              }
+            )}
           </Container>
         </Paper>
       </Box>
