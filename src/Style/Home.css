@@ -8,10 +8,23 @@
 body {
   height: 100%;
   overflow: auto;
-  /* background: linear-gradient(
-    0deg,
-    rgba(0, 0, 0, 0.7) 0%,
-    rgba(0, 0, 0, 0.7) 100%
-  ); */
-  /* url("https://imgk.timesnownews.com/story/money.png"); */
+  background: linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.7) 0%,
+      rgba(0, 0, 0, 0.7) 100%
+    ),
+    url("https://imgk.timesnownews.com/story/money.png");
+}
+
+.css-1pomjnl-MuiButtonBase-root-MuiButton-root {
+  margin-top: 16px !important;
+}
+
+@media screen and (max-width: 1341px) {
+  .css-k008qs {
+    flex-direction: column;
+  }
+  .css-gg4vpm {
+    flex-direction: column;
+  }
 }
