@@ -19,6 +19,7 @@ import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import useTransactions from "../Utils/useTransactions";
 import { incomeCategories, expenseCategories } from "../Utils/categories";
+import { useNavigate } from "react-router-dom";
 import "../Style/Home.css";
 import db from "../Utils/firebase";
 
@@ -38,8 +39,8 @@ function Home() {
     date: new Date().toDateString(),
   });
   const [transactionList, setTransactionList] = React.useState([]);
-  const [incomeList, setIncomeList] = React.useState([]);
-  const [expenseList, setExpenseList] = React.useState([]);
+
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     const transactionRef = db.database().ref("Transaction");
@@ -50,16 +51,6 @@ function Home() {
         list.push({ id, ...transactions[id] });
       }
       setTransactionList(list);
-      let a = list.filter(function (currentElement) {
-        // the current value is an object, so you can check on its properties
-        return currentElement.type === "Income";
-      });
-      let b = list.filter(function (currentElement) {
-        // the current value is an object, so you can check on its properties
-        return currentElement.type === "Expense";
-      });
-      setIncomeList(a);
-      setExpenseList(b);
     });
   }, []);
 
@@ -92,6 +83,7 @@ function Home() {
             borderBottom: 5,
             borderBottomColor: "red",
           }}
+          className="expenseDoughnut"
         >
           <Container
             component="main"
@@ -254,6 +246,7 @@ function Home() {
             borderBottom: 5,
             borderBottomColor: "green",
           }}
+          className="IncomeDoughnut"
         >
           <Container
             component="main"
@@ -285,6 +278,7 @@ function Home() {
             borderBottom: 5,
             borderBottomColor: "red",
           }}
+          className="ExpenseDetails"
         >
           <Container
             component="main"
@@ -361,6 +355,7 @@ function Home() {
             borderBottom: 5,
             borderBottomColor: "white",
           }}
+          className="transactionDetailsMainContainer"
         >
           <Container
             component="main"
@@ -368,44 +363,52 @@ function Home() {
             sx={{
               mb: 4,
               maxHeight: "350px",
-              width: "350px",
               overflow: "hidden",
             }}
           >
+            <Button
+              variant="contained"
+              fullWidth
+              sx={{ mt: 3, mb: 2 }}
+              onClick={() => {
+                navigate("/overview");
+              }}
+            >
+              Overview
+            </Button>
             {transactionList
               .slice(0)
               .reverse()
               .map((item, key) => {
                 return (
-                  <div key={key}>
-                    <Grid
-                      item
-                      xs={12}
-                      sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "space-between",
+                  <Grid
+                    item
+                    key={key}
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                    }}
+                    className="transactionDetails"
+                  >
+                    <Typography sx={{ margin: 1 }}>
+                      {`${key + 1}) ${item.source} - ₹${item.amount} `}
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      sx={{ mt: 3, mb: 2 }}
+                      onClick={() => {
+                        const transactionRef = db
+                          .database()
+                          .ref("Transaction")
+                          .child(item.id);
+                        transactionRef.remove();
                       }}
                     >
-                      <Typography sx={{ margin: 1 }}>
-                        {`${key + 1}) ${item.source} - ₹${item.amount} `}
-                      </Typography>
-                      <Button
-                        variant="contained"
-                        sx={{ mt: 3, mb: 2 }}
-                        onClick={() => {
-                          const transactionRef = db
-                            .database()
-                            .ref("Transaction")
-                            .child(item.id);
-                          transactionRef.remove();
-                        }}
-                      >
-                        Delete
-                      </Button>
-                    </Grid>
-                  </div>
+                      Delete
+                    </Button>
+                  </Grid>
                 );
               })}
           </Container>
@@ -418,6 +421,7 @@ function Home() {
             borderBottom: 5,
             borderBottomColor: "green",
           }}
+          className="IncomeDetails"
         >
           <Container
             component="main"
