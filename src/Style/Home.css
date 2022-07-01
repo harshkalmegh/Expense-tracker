@@ -19,6 +19,9 @@ body {
 .css-1pomjnl-MuiButtonBase-root-MuiButton-root {
   margin-top: 16px !important;
 }
+.css-d2r957-MuiContainer-root {
+  margin-bottom: 0 !important;
+}
 
 @media screen and (max-width: 1341px) {
   .css-k008qs {
@@ -26,5 +29,28 @@ body {
   }
   .css-gg4vpm {
     flex-direction: column;
+  }
+  .expenseDoughnut {
+    display: none;
+  }
+  .IncomeDoughnut {
+    display: none;
+  }
+  .ExpenseDetails {
+    display: none;
+  }
+  .IncomeDetails {
+    display: none;
+  }
+  .transactionDetails {
+    display: flex;
+    flex-direction: column !important;
+  }
+}
+
+@media screen and (min-width: 1341px) {
+  .transactionDetailsMainContainer {
+    max-width: 550px;
+    width: 31%;
   }
 }
