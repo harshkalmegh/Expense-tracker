@@ -11,6 +11,11 @@ const useTransactions = (title, transactions) => {
     (acc, currVal) => (acc += +currVal.amount),
     0
   );
+  const allTotal = transactions.reduce(
+    (acc, currVal) => (acc += +currVal.amount),
+    0
+  );
+
   const categories = title === "Income" ? incomeCategories : expenseCategories;
 
   rightTransactions.forEach((t) => {
@@ -31,7 +36,7 @@ const useTransactions = (title, transactions) => {
     labels: filteredCategories.map((c) => c.type),
   };
 
-  return { filteredCategories, total, chartData, rightTransactions };
+  return { filteredCategories, total, chartData, rightTransactions, allTotal };
 };
 
 export default useTransactions;
