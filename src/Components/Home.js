@@ -19,13 +19,12 @@ import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import useTransactions from "../Utils/useTransactions";
 import { incomeCategories, expenseCategories } from "../Utils/categories";
-
 import "../Style/Home.css";
 import db from "../Utils/firebase";
 
 const theme = createTheme({
   palette: {
-    mode: "light",
+    mode: "dark",
   },
 });
 
@@ -68,13 +67,13 @@ function Home() {
     if (expenseDetails.amount !== "") {
       const transactionRef = db.database().ref("Transaction");
       transactionRef.push(expenseDetails);
+      setExpenseDetails({
+        type: "",
+        source: "",
+        amount: "",
+        date: new Date().toDateString(),
+      });
     }
-    setExpenseDetails({
-      type: "",
-      source: "",
-      amount: "",
-      date: new Date().toDateString(),
-    });
   };
 
   const inputUpdate = (e) => {
@@ -94,7 +93,14 @@ function Home() {
             borderBottomColor: "red",
           }}
         >
-          <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
+          <Container
+            component="main"
+            maxWidth="350px"
+            sx={{
+              mb: 4,
+              maxHeight: "350px",
+            }}
+          >
             <Typography
               component="h1"
               variant="h4"
@@ -108,55 +114,24 @@ function Home() {
                 data={useTransactions("Expense", transactionList).chartData}
               />
             </div>
-            {useTransactions("Expense", transactionList).rightTransactions.map(
-              (item, key) => {
-                return (
-                  <div key={key}>
-                    <span>
-                      {key + 1}
-                      {") "}
-                      {item.source}
-                      {" - ₹"}
-                      {item.amount}{" "}
-                    </span>
-                    <button
-                      onClick={() => {
-                        const transactionRef = db
-                          .database()
-                          .ref("Transaction")
-                          .child(item.id);
-                        transactionRef.remove();
-                      }}
-                    >
-                      Delete
-                    </button>
-                    <button
-                      onClick={() => {
-                        setExpenseDetails({
-                          type: item.type,
-                          source: item.source,
-                          amount: item.amount,
-                          date: new Date(item.date),
-                        });
-                        const transactionRef = db
-                          .database()
-                          .ref("Transaction")
-                          .child(item.id);
-                        transactionRef.remove();
-                      }}
-                    >
-                      Edit
-                    </button>
-                  </div>
-                );
-              }
-            )}
           </Container>
         </Paper>
-        <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
+        <Container
+          component="main"
+          maxWidth="sm"
+          sx={{
+            mb: 4,
+            height: "590px",
+          }}
+        >
           <Paper
             variant="outlined"
-            sx={{ my: { xs: 3, md: 4 }, p: { xs: 2, md: 3 } }}
+            sx={{
+              my: { xs: 3, md: 4 },
+              p: { xs: 2, md: 3 },
+              borderBottom: 5,
+              borderBottomColor: "white",
+            }}
           >
             <Box display="flex" justifyContent="center" alignItems="center">
               <Typography
@@ -166,6 +141,18 @@ function Home() {
                 sx={{ margin: 1 }}
               >
                 Expense Tracker
+              </Typography>
+            </Box>
+            <Box display="flex" justifyContent="center" alignItems="center">
+              <Typography
+                component="h1"
+                variant="h4"
+                align="center"
+                sx={{ margin: 1 }}
+              >
+                Total - ₹
+                {useTransactions("Income", transactionList).total -
+                  useTransactions("Expense", transactionList).total}
               </Typography>
             </Box>
             <Box component="form" noValidate sx={{ mt: 3 }}>
@@ -268,7 +255,11 @@ function Home() {
             borderBottomColor: "green",
           }}
         >
-          <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
+          <Container
+            component="main"
+            maxWidth="sm"
+            sx={{ mb: 4, maxHeight: "350px" }}
+          >
             <Typography
               component="h1"
               variant="h4"
@@ -282,49 +273,217 @@ function Home() {
                 data={useTransactions("Income", transactionList).chartData}
               />
             </div>
-            {useTransactions("Income", transactionList).rightTransactions.map(
-              (item, key) => {
+          </Container>
+        </Paper>
+      </Box>
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Paper
+          variant="outlined"
+          sx={{
+            my: { xs: 3, md: 4 },
+            p: { xs: 2, md: 3 },
+            borderBottom: 5,
+            borderBottomColor: "red",
+          }}
+        >
+          <Container
+            component="main"
+            maxWidth="sm"
+            sx={{
+              mb: 4,
+              maxHeight: "350px",
+              width: "400px",
+              overflow: "hidden",
+            }}
+          >
+            {useTransactions("Expense", transactionList)
+              .rightTransactions.slice(0)
+              .reverse()
+              .map((item, key) => {
                 return (
                   <div key={key}>
-                    <span>
-                      {key + 1}
-                      {") "}
-                      {item.source}
-                      {" - ₹"}
-                      {item.amount}{" "}
-                    </span>
-                    <button
-                      onClick={() => {
-                        const transactionRef = db
-                          .database()
-                          .ref("Transaction")
-                          .child(item.id);
-                        transactionRef.remove();
+                    <Grid
+                      item
+                      xs={12}
+                      sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "space-between",
                       }}
                     >
-                      Delete
-                    </button>
-                    <button
-                      onClick={() => {
-                        setExpenseDetails({
-                          type: item.type,
-                          source: item.source,
-                          amount: item.amount,
-                          date: new Date(item.date),
-                        });
-                        const transactionRef = db
-                          .database()
-                          .ref("Transaction")
-                          .child(item.id);
-                        transactionRef.remove();
-                      }}
-                    >
-                      Edit
-                    </button>
+                      <Typography sx={{ margin: 1 }}>
+                        {`${key + 1}) ${item.source} - ₹${item.amount} `}
+                      </Typography>
+                      <Button
+                        variant="contained"
+                        sx={{ mt: 3, mb: 2 }}
+                        onClick={() => {
+                          const transactionRef = db
+                            .database()
+                            .ref("Transaction")
+                            .child(item.id);
+                          transactionRef.remove();
+                        }}
+                      >
+                        Delete
+                      </Button>
+                      <Button
+                        variant="contained"
+                        sx={{ mt: 3, mb: 2 }}
+                        onClick={() => {
+                          setExpenseDetails({
+                            type: item.type,
+                            source: item.source,
+                            amount: item.amount,
+                            date: new Date(item.date),
+                          });
+                          const transactionRef = db
+                            .database()
+                            .ref("Transaction")
+                            .child(item.id);
+                          transactionRef.remove();
+                        }}
+                      >
+                        Edit
+                      </Button>
+                    </Grid>
                   </div>
                 );
-              }
-            )}
+              })}
+          </Container>
+        </Paper>
+        <Paper
+          variant="outlined"
+          sx={{
+            my: { xs: 3, md: 4 },
+            p: { xs: 2, md: 3 },
+            borderBottom: 5,
+            borderBottomColor: "white",
+          }}
+        >
+          <Container
+            component="main"
+            maxWidth="sm"
+            sx={{
+              mb: 4,
+              maxHeight: "350px",
+              width: "350px",
+              overflow: "hidden",
+            }}
+          >
+            {transactionList
+              .slice(0)
+              .reverse()
+              .map((item, key) => {
+                return (
+                  <div key={key}>
+                    <Grid
+                      item
+                      xs={12}
+                      sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Typography sx={{ margin: 1 }}>
+                        {`${key + 1}) ${item.source} - ₹${item.amount} `}
+                      </Typography>
+                      <Button
+                        variant="contained"
+                        sx={{ mt: 3, mb: 2 }}
+                        onClick={() => {
+                          const transactionRef = db
+                            .database()
+                            .ref("Transaction")
+                            .child(item.id);
+                          transactionRef.remove();
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    </Grid>
+                  </div>
+                );
+              })}
+          </Container>
+        </Paper>
+        <Paper
+          variant="outlined"
+          sx={{
+            my: { xs: 3, md: 4 },
+            p: { xs: 2, md: 3 },
+            borderBottom: 5,
+            borderBottomColor: "green",
+          }}
+        >
+          <Container
+            component="main"
+            maxWidth="sm"
+            sx={{
+              mb: 4,
+              maxHeight: "350px",
+              width: "400px",
+              overflow: "hidden",
+            }}
+          >
+            {useTransactions("Income", transactionList)
+              .rightTransactions.slice(0)
+              .reverse()
+              .map((item, key) => {
+                return (
+                  <div key={key}>
+                    <Grid
+                      item
+                      xs={12}
+                      sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Typography sx={{ margin: 1 }}>
+                        {`${key + 1}) ${item.source} - ₹${item.amount} `}
+                      </Typography>
+                      <Button
+                        variant="contained"
+                        sx={{ mt: 3, mb: 2 }}
+                        onClick={() => {
+                          const transactionRef = db
+                            .database()
+                            .ref("Transaction")
+                            .child(item.id);
+                          transactionRef.remove();
+                        }}
+                      >
+                        Delete
+                      </Button>
+                      <Button
+                        variant="contained"
+                        sx={{ mt: 3, mb: 2 }}
+                        onClick={() => {
+                          setExpenseDetails({
+                            type: item.type,
+                            source: item.source,
+                            amount: item.amount,
+                            date: new Date(item.date),
+                          });
+                          const transactionRef = db
+                            .database()
+                            .ref("Transaction")
+                            .child(item.id);
+                          transactionRef.remove();
+                        }}
+                      >
+                        Edit
+                      </Button>
+                    </Grid>
+                  </div>
+                );
+              })}
           </Container>
         </Paper>
       </Box>
