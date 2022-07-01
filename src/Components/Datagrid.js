@@ -22,8 +22,9 @@ function Datagrid() {
       setTransactionList(list);
     });
   }, []);
+  
   return (
-    <DataGrid dataSource={transactionList}>
+    <DataGrid dataSource={transactionList} columnAutoWidth={true}>
       <Column dataField="id" visible={false} />
       <Column dataField="type" visible={true} />
       <Column dataField="source" visible={true} />
